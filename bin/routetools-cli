@@ -1,0 +1,38 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
+import routetools
+
+def main():
+  import argparse
+  parser = argparse.ArgumentParser(
+    formatter_class=argparse.ArgumentDefaultsHelpFormatter,
+    description="Tools for route files -- Convert, Add POI, Remove POI"
+    )
+  inopts = parser.add_argument_group("Input Options")
+  inopts.add_argument('file', help="input base route filepath (*.gpx, *.kml, *.kmz, *.tcx)")
+  inopts.add_argument("-r", "--remove-original-poi", action='store_true', help="remove original POI from base route")
+  inopts.add_argument('-p', '--poi', help="POI source filepath (*.csv, *.gpx, *.kml, *.kmz, *.tcx)")
+  outopts = parser.add_argument_group("Output Options")
+  outopts.add_argument("-t", "--out-type", choices=["GPX", "TCX"], default="TCX", help="output type")
+  outopts.add_argument("--indent", type=int, default=2, help="number of spaces for indentation")
+  outopts.add_argument('-o', '--output', help="output route filepath (*.gpx, *.tcx)")
+  outopts.add_argument('--output-poi', help="output POI in csv format (*.csv)")
+  options = parser.parse_args()
+
+  route = routetools.RouteTools()
+  route.parse(options.file)
+  if options.remove_original_poi:
+    route.remove_poi()
+  if options.poi:
+    route.add_poi(options.poi)
+  route.build(options.out_type)
+  if options.output:
+    route.write(options.output, options.indent)
+  else:
+    route.dump(options.indent)
+  if options.output_poi:
+    route.output_poi(options.output_poi)
+
+if __name__ == '__main__':
+  main()
