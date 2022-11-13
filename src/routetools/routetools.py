@@ -94,8 +94,9 @@ class RouteTools:
       sys.exit(1)
 
 class Metadata:
-  def __init__(self, name):
-    self.name = name
+  def __init__(self, name, type_=None):
+    self.name  = name
+    self.type_ = type_ if type_ else "Ride"
 
 class Trackpoint:
   def __init__(self, latitude, longitude, elevation, distance=None):
@@ -137,7 +138,8 @@ class GPX:
     tree = ET.parse(filepath)
     root = tree.getroot()
     name = root.findtext('.//{*}metadata/{*}name')
-    metadata = Metadata(name=name)
+    type_ = root.findtext('.//{*}trk/{*}type')
+    metadata = Metadata(name=name, type_=type_)
     trackpoints = []
     for trkpt in root.findall('.//{*}trkpt'):
       latitude = trkpt.get('lat')
@@ -170,6 +172,7 @@ class GPX:
       root.append(wpt)
     trk = ET.SubElement(root, 'trk')
     ET.SubElement(trk, 'name').text = metadata.name
+    ET.SubElement(trk, 'type').text = metadata.type_
     trkseg = ET.SubElement(trk, 'trkseg')
     for trackpoint in trackpoints:
       trkpt = ET.Element('trkpt')
