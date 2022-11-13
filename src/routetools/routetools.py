@@ -159,6 +159,8 @@ class GPX:
 
   def build(metadata, trackpoints, POI_list):
     root = ET.Element('gpx')
+    root.set('xmlns', "http://www.topografix.com/GPX/1/1")
+    root.set('xmlns:xsi', "http://www.garmin.com/xmlschemas/GpxExtensions/v3")
     root_metadata = ET.SubElement(root, 'metadata')
     ET.SubElement(root_metadata, 'name').text = metadata.name
     for poi in POI_list:
@@ -244,6 +246,8 @@ class TCX:
 
   def build(metadata, trackpoints, POI_list, tolerance=100):
     root = ET.Element('TrainingCenterDatabase')
+    root.set('xmlns', "http://www.garmin.com/xmlschemas/TrainingCenterDatabase/v2")
+    root.set('xmlns:xsi', "http://www.w3.org/2001/XMLSchema-instance")
     folders = ET.SubElement(root, 'Folders')
     folders_courses = ET.SubElement(folders, 'Courses')
     folders_courses_coursefolder = ET.SubElement(folders_courses, 'CourseFolder')
