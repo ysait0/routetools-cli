@@ -15,7 +15,7 @@ def main():
   inopts.add_argument('-p', '--poi', help="POI source filepath (*.csv, *.gpx, *.kml, *.kmz, *.tcx)")
   outopts = parser.add_argument_group("Output Options")
   outopts.add_argument("-t", "--out-type", choices=["GPX", "TCX"], default="TCX", help="output type")
-  outopts.add_argument("--indent", type=int, default=2, help="number of spaces for indentation")
+  outopts.add_argument("--indent", type=int, default=1, help="number of spaces for indentation")
   outopts.add_argument('-o', '--output', help="output route filepath (*.gpx, *.tcx)")
   outopts.add_argument('--output-poi', help="output POI in csv format (*.csv)")
   options = parser.parse_args()

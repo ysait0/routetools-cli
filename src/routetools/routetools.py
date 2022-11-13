@@ -66,14 +66,14 @@ class RouteTools:
       sys.exit(1)
     self.tree = ET.ElementTree(root)
 
-  def set_indent(self, indent=2):
+  def set_indent(self, indent=1):
     ET.indent(self.tree, ' '*indent)
 
-  def dump(self, indent=2):
+  def dump(self, indent=1):
     self.set_indent(indent)
     ET.dump(self.tree)
 
-  def write(self, filepath, indent=2):
+  def write(self, filepath, indent=1):
     self.set_indent(indent)
     type_output = self.check_type(filepath)
     if type_output != self.type_output:
