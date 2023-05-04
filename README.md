@@ -59,6 +59,7 @@ pip install git+https://github.com/ysait0/routetools-cli.git
 | `-r`, `--remove-original-poi` | Remove original POI from base route. Default is False. |
 |         `-p`, `--poi`         | POI source filepath to import.                         |
 |      `-t`, `--out-type`       | Output type. Default is TCX.                           |
+|         `--tolerance`         | Tolerance to add POI. Default is 100 m.                |
 |          `--indent`           | Number of spaces for indentation. Default is 2.        |
 |       `-o`, `--output`        | Output route filepath.                                 |
 |        `--output-poi`         | Output POI in csv format.                              |
@@ -150,7 +151,7 @@ routetools route_base.gpx -r -t GPX -o route_new.gpx
 
 ```bash
 ### KML -> TCX
-routetools route_base.kml -o route_new.tcx
+routetools route_base.kml -o route_new.tcx --tolerance 150
 
 ### KMZ -> GPX
 routetools route_base.kmz -t GPX -o route_new.gpx
