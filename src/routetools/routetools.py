@@ -57,10 +57,12 @@ class RouteTools:
   def remove_poi(self):
     self.POI_list = []
 
-  def build(self, type_output="TCX"):
+  def build(self, type_output, tolerance):
     self.type_output = type_output
-    if self.type_output in ['GPX', 'TCX']:
-      root = globals()[self.type_output].build(self.metadata, self.trackpoints, self.POI_list)
+    if self.type_output == 'GPX':
+      root = GPX.build(self.metadata, self.trackpoints, self.POI_list)
+    elif self.type_output == 'TCX':
+      root = TCX.build(self.metadata, self.trackpoints, self.POI_list, tolerance)
     else:
       print(Color.RED + f"{type_output} is not supported yet" + Color.END, file=sys.stderr)
       sys.exit(1)
@@ -284,9 +286,9 @@ class TCX:
         distances.append(geodesic(poi.coords, trackpoint.coords).m)
       min_idx = numpy.argmin(numpy.array(distances))
       if distances[min_idx] < tolerance:
-        print("found nearest trackpoint: {:.2f} m".format(distances[min_idx]), file=sys.stderr)
+        print("found nearest trackpoint: " + Color.GREEN + f"{distances[min_idx]:.2f} m" + Color.END, file=sys.stderr)
       else:
-        print(Color.YELLOW + "skip" + Color.END, file=sys.stderr)
+        print(Color.YELLOW + f"skip: {distances[min_idx]:.2f} m > {tolerance:.2f} m" + Color.END, file=sys.stderr)
         continue
       position = ET.SubElement(coursepoint, 'Position')
       ET.SubElement(position, 'LatitudeDegrees').text = trackpoints[min_idx].latitude
