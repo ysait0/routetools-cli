@@ -5,7 +5,7 @@ from setuptools import setup
 
 setup(
   name="routetools-cli",
-  version="1.2.0",
+  version="1.3.0",
   description="Tools for route files -- Convert, Add POI, Remove POI",
   author="ysait0",
   url="https://github.com/ysait0/routetools-cli",

@@ -57,10 +57,10 @@ class RouteTools:
   def remove_poi(self):
     self.POI_list = []
 
-  def build(self, type_output, tolerance):
+  def build(self, type_output, tolerance, force):
     self.type_output = type_output
     if self.type_output == 'GPX':
-      root = GPX.build(self.metadata, self.trackpoints, self.POI_list)
+      root = GPX.build(self.metadata, self.trackpoints, self.POI_list, tolerance, force)
     elif self.type_output == 'TCX':
       root = TCX.build(self.metadata, self.trackpoints, self.POI_list, tolerance)
     else:
@@ -159,20 +159,39 @@ class GPX:
       POI_list.append(POI(latitude=latitude, longitude=longitude, name=name, notes=notes, type_=type_, symbol=symbol))
     return metadata, trackpoints, POI_list
 
-  def build(metadata, trackpoints, POI_list):
+  def build(metadata, trackpoints, POI_list, tolerance, force):
     root = ET.Element('gpx')
     root.set('xmlns', "http://www.topografix.com/GPX/1/1")
     root.set('xmlns:xsi', "http://www.garmin.com/xmlschemas/GpxExtensions/v3")
     root_metadata = ET.SubElement(root, 'metadata')
     ET.SubElement(root_metadata, 'name').text = metadata.name
-    for poi in POI_list:
+    for i,poi in enumerate(POI_list):
+      print(i+1, poi.name, file=sys.stderr)
       wpt = ET.Element('wpt')
-      wpt.set('lat', poi.latitude)
-      wpt.set('lon', poi.longitude)
       ET.SubElement(wpt, 'name').text = poi.name
-      ET.SubElement(wpt, 'desc').text = poi.notes
-      ET.SubElement(wpt, 'sym').text = poi.symbol if poi.symbol else 'Flag'
-      ET.SubElement(wpt, 'type').text = poi.type_ if poi.type_ else 'Flag'
+      # ET.SubElement(wpt, 'desc').text = poi.notes
+      # ET.SubElement(wpt, 'sym').text = poi.symbol if poi.symbol else 'Flag'
+      ET.SubElement(wpt, 'type').text = poi.type_ if poi.type_ else 'GENERIC'
+      distances = []
+      for trackpoint in trackpoints:
+        distances.append(geodesic(poi.coords, trackpoint.coords).m)
+      min_idx = numpy.argmin(numpy.array(distances))
+      if force:
+        if distances[min_idx] < tolerance:
+          print("found nearest trackpoint: " + Color.GREEN + f"{distances[min_idx]:.2f} m" + Color.END, file=sys.stderr)
+          wpt.set('lat', trackpoints[min_idx].latitude)
+          wpt.set('lon', trackpoints[min_idx].longitude)
+        else:
+          print(Color.YELLOW + f"skip: {distances[min_idx]:.2f} m > {tolerance:.2f} m" + Color.END, file=sys.stderr)
+          continue
+      else:
+        if distances[min_idx] < tolerance:
+          print("added: " + Color.GREEN + f"{distances[min_idx]:.2f} m" + Color.END, file=sys.stderr)
+          wpt.set('lat', poi.latitude)
+          wpt.set('lon', poi.longitude)
+        else:
+          print(Color.YELLOW + f"skip: {distances[min_idx]:.2f} m > {tolerance:.2f} m" + Color.END, file=sys.stderr)
+          continue
       root.append(wpt)
     trk = ET.SubElement(root, 'trk')
     ET.SubElement(trk, 'name').text = metadata.name
@@ -246,7 +265,7 @@ class TCX:
       POI_list.append(POI(latitude=latitude, longitude=longitude, name=name, type_=type_, notes=notes))
     return metadata, trackpoints, POI_list
 
-  def build(metadata, trackpoints, POI_list, tolerance=100):
+  def build(metadata, trackpoints, POI_list, tolerance):
     root = ET.Element('TrainingCenterDatabase')
     root.set('xmlns', "http://www.garmin.com/xmlschemas/TrainingCenterDatabase/v2")
     root.set('xmlns:xsi', "http://www.w3.org/2001/XMLSchema-instance")

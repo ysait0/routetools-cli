@@ -9,7 +9,7 @@ def main():
     formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     description="Tools for route files -- Convert, Add POI, Remove POI"
     )
-  parser.add_argument('-v', '--version', action='version', version='%(prog)s 1.2.0', help="show version")
+  parser.add_argument('-v', '--version', action='version', version='%(prog)s 1.3.0', help="show version")
   inopts = parser.add_argument_group("Input Options")
   inopts.add_argument('-i', '--input', help="input base route filepath (*.gpx, *.kml, *.kmz, *.tcx)")
   inopts.add_argument('-r', '--remove-original-poi', action='store_true', help="remove original POI from base route")
@@ -17,6 +17,7 @@ def main():
   outopts = parser.add_argument_group("Output Options")
   outopts.add_argument('-t', '--out-type', choices=["GPX", "TCX"], default="TCX", help="output type")
   outopts.add_argument('--tolerance', type=float, default=100, help="tolerance to add POI")
+  outopts.add_argument('-f', '--force', action='store_true', help="force POI add nearest point on route. if out-type is TCX, it is always force")
   outopts.add_argument('--indent', type=int, default=1, help="number of spaces for indentation")
   outopts.add_argument('-o', '--output', help="output route filepath (*.gpx, *.tcx)")
   outopts.add_argument('--output-poi', help="output POI in csv format (*.csv)")
@@ -28,13 +29,14 @@ def main():
     route.remove_poi()
   if options.poi:
     route.add_poi(options.poi)
-  route.build(type_output=options.out_type, tolerance=options.tolerance)
-  if options.output:
-    route.write(options.output, options.indent)
-  else:
-    route.dump(options.indent)
   if options.output_poi:
     route.output_poi(options.output_poi)
+  else:
+    route.build(type_output=options.out_type, tolerance=options.tolerance, force=options.force)
+    if options.output:
+      route.write(options.output, options.indent)
+    else:
+      route.dump(options.indent)
 
 if __name__ == '__main__':
   main()
