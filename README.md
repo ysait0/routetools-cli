@@ -134,16 +134,13 @@ Please follow the steps below.
 
 #### 1. Import route file to the new layer on Google My Maps
 
-Google My Maps doesn't support TCX and GPX includes POI.
+Google My Maps doesn't support TCX.
 
-Please convert and remove POI first when you only have TCX or GPX file includes POI.
+Please convert first when you only have TCX file.
 
 ```bash
-### TCX -> GPX -- Remove original POI
-routetools -i route_base.tcx -r -t GPX -o route_new.gpx
-
-### GPX -> GPX -- Remove original POI
-routetools -i route_base.gpx -r -t GPX -o route_new.gpx
+### TCX -> GPX
+routetools -i route_base.tcx -t GPX -o route_new.gpx
 ```
 
 #### 2. Add POI to the layer
