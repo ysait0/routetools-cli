@@ -26,6 +26,8 @@
 
 ターミナルで `routetools` または `routetools-cli` コマンドとして使用します。
 
+> **ブラウザ版もあります**: [routetools-webapp](https://ysait0.github.io/routetools-webapp/) — インストール不要でブラウザから直接利用できます。([リポジトリ](https://github.com/ysait0/routetools-webapp))
+
 ## インストール
 
 ```bash

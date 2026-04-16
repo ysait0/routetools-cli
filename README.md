@@ -26,6 +26,8 @@
 
 We use it via `routetools` or `routetools-cli` in terminal.
 
+> **Looking for a browser-based version?** Try [routetools-webapp](https://ysait0.github.io/routetools-webapp/) — no installation required. ([repository](https://github.com/ysait0/routetools-webapp))
+
 ## Install
 
 ```bash
