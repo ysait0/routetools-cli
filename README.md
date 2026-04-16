@@ -1,6 +1,6 @@
 # routetools-cli
 
-[日本語](README.ja.md)
+[日本語のREADMEはこちら](README.ja.md)
 
 - [routetools-cli](#routetools-cli)
   - [Install](#install)
