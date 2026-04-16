@@ -6,19 +6,19 @@
   - [Options](#options)
   - [Usage](#usage)
     - [Convert](#convert)
-      - [Examples)](#examples)
+      - [Examples](#examples)
     - [Add POI -- using other route file](#add-poi----using-other-route-file)
-      - [Examples)](#examples-1)
+      - [Examples](#examples-1)
     - [Add POI -- using csv file](#add-poi----using-csv-file)
-      - [Examples)](#examples-2)
+      - [Examples](#examples-2)
     - [Add POI -- using Google My Maps](#add-poi----using-google-my-maps)
-      - [1. Import route file to the new layer oo Google My Maps](#1-import-route-file-to-the-new-layer-oo-google-my-maps)
+      - [1. Import route file to the new layer on Google My Maps](#1-import-route-file-to-the-new-layer-on-google-my-maps)
       - [2. Add POI to the layer](#2-add-poi-to-the-layer)
       - [3. Export the layer with KML or KMZ](#3-export-the-layer-with-kml-or-kmz)
       - [4. Convert the file with `routetools-cli`](#4-convert-the-file-with-routetools-cli)
   - [File Format](#file-format)
     - [CSV](#csv)
-      - [Examples)](#examples-3)
+      - [Examples](#examples-3)
   - [License](#license)
 
 `routetools-cli` is tool for route files, it enables us to convert, add POI, remove POI.
@@ -54,15 +54,18 @@ pip install git+https://github.com/ysait0/routetools-cli.git
 
 ## Options
 
-|            Options            | Description                                            |
-| :---------------------------: | ------------------------------------------------------ |
-| `-r`, `--remove-original-poi` | Remove original POI from base route. Default is False. |
-|         `-p`, `--poi`         | POI source filepath to import.                         |
-|      `-t`, `--out-type`       | Output type. Default is TCX.                           |
-|         `--tolerance`         | Tolerance to add POI. Default is 100 m.                |
-|          `--indent`           | Number of spaces for indentation. Default is 2.        |
-|       `-o`, `--output`        | Output route filepath.                                 |
-|        `--output-poi`         | Output POI in csv format.                              |
+|            Options            | Description                                                                       |
+| :---------------------------: | --------------------------------------------------------------------------------- |
+|      `-v`, `--version`        | Show version.                                                                     |
+|       `-i`, `--input`         | Input base route filepath (*.gpx, *.kml, *.kmz, *.tcx).                          |
+| `-r`, `--remove-original-poi` | Remove original POI from base route. Default is False.                            |
+|         `-p`, `--poi`         | POI source filepath to import (*.csv, *.gpx, *.kml, *.kmz, *.tcx).              |
+|      `-t`, `--out-type`       | Output type. Default is TCX.                                                      |
+|         `--tolerance`         | Tolerance to add POI. Default is 100 m.                                           |
+|       `-f`, `--force`         | Force POI add nearest point on route. If out-type is TCX, it is always force.     |
+|          `--indent`           | Number of spaces for indentation. Default is 1.                                   |
+|       `-o`, `--output`        | Output route filepath.                                                            |
+|        `--output-poi`         | Output POI in csv format.                                                         |
 
 ## Usage
 
@@ -82,45 +85,45 @@ Available Output Types:
 - GPX
 - TCX
 
-#### Examples)
+#### Examples
 
 ```bash
 ### GPX -> TCX
-routetools route.gpx -o route_new.tcx
+routetools -i route.gpx -o route_new.tcx
 
 ### TCX -> GPX -- Remove POI
-routetools route.tcx -r -t GPX -o route_new.gpx
+routetools -i route.tcx -r -t GPX -o route_new.gpx
 
 ### KML -> GPX
-routetools route.kml -t GPX -o route_new.gpx
+routetools -i route.kml -t GPX -o route_new.gpx
 ```
 
 ### Add POI -- using other route file
 
 Import POI from other route file and Add them into base route file.
 
-#### Examples)
+#### Examples
 
 ```bash
-### Add POI imported from route_ref.gpx to route_base.tcx 
-routetools route_base.tcx -p route_ref.gpx -o route_new.tcx
+### Add POI imported from route_ref.gpx to route_base.tcx
+routetools -i route_base.tcx -p route_ref.gpx -o route_new.tcx
 
 ### Remove original POI in base route file and Add POI imported from route_ref.kml
-outetools route_base.gpx -r -p route_ref.kml -t GPX -o route_new.gpx
+routetools -i route_base.gpx -r -p route_ref.kml -t GPX -o route_new.gpx
 ```
 
 ### Add POI -- using csv file
 
 Import POI from csv file and Add them into base route file.
 
-#### Examples)
+#### Examples
 
 ```bash
 ### TCX -> TCX -- Add POI imported from csv file
-routetools route_base.tcx -p poi.csv -o route_new.tcx
+routetools -i route_base.tcx -p poi.csv -o route_new.tcx
 
 ### GPX -> TCX -- Remove original POI and ADD POI imported from csv file
-routetools route_base.gpx -r -p poi.csv -o route_new.tcx
+routetools -i route_base.gpx -r -p poi.csv -o route_new.tcx
 ```
 
 ### Add POI -- using Google My Maps
@@ -129,7 +132,7 @@ The easiest way to add POI is using Google My Maps.
 
 Please follow the steps below.
 
-#### 1. Import route file to the new layer oo Google My Maps
+#### 1. Import route file to the new layer on Google My Maps
 
 Google My Maps doesn't support TCX and GPX includes POI.
 
@@ -137,10 +140,10 @@ Please convert and remove POI first when you only have TCX or GPX file includes 
 
 ```bash
 ### TCX -> GPX -- Remove original POI
-routetools route_base.tcx -r -t GPX -o route_new.gpx
+routetools -i route_base.tcx -r -t GPX -o route_new.gpx
 
 ### GPX -> GPX -- Remove original POI
-routetools route_base.gpx -r -t GPX -o route_new.gpx
+routetools -i route_base.gpx -r -t GPX -o route_new.gpx
 ```
 
 #### 2. Add POI to the layer
@@ -151,10 +154,10 @@ routetools route_base.gpx -r -t GPX -o route_new.gpx
 
 ```bash
 ### KML -> TCX
-routetools route_base.kml -o route_new.tcx --tolerance 150
+routetools -i route_base.kml -o route_new.tcx --tolerance 150
 
 ### KMZ -> GPX
-routetools route_base.kmz -t GPX -o route_new.gpx
+routetools -i route_base.kmz -t GPX -o route_new.gpx
 ```
 
 ## File Format
@@ -173,7 +176,7 @@ routetools route_base.kmz -t GPX -o route_new.gpx
 | Description | required |
 |    Type     | optional |
 
-#### Examples)
+#### Examples
 
 ```csv
 35.68249921156559,139.77653207620816,PC1,セブンイレブン日本橋１丁目昭和通り店
