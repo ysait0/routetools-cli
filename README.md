@@ -1,7 +1,8 @@
 # routetools-cli
 
+[日本語](README.ja.md)
+
 - [routetools-cli](#routetools-cli)
-  - [:warning: Information](#warning-information)
   - [Install](#install)
   - [Options](#options)
   - [Usage](#usage)
@@ -21,23 +22,9 @@
       - [Examples](#examples-3)
   - [License](#license)
 
-`routetools-cli` is tool for route files, it enables us to convert, add POI, remove POI.
+`routetools-cli` is a CLI tool for route files. It enables you to convert formats, add/remove POI for cycling GPS devices such as Garmin, Wahoo, Bryton, Pioneer, etc.
 
 We use it via `routetools` or `routetools-cli` in terminal.
-
----
-
-## :warning: Information
-
-This project is under development and I'm testing on Pioneer SGX-CA600 only.
-
-I would like to test it on other hardware such as Garmin, Wahoo, Bryton, etc.
-
-I would be grateful if you could help me with the test.
-
-Thank you.
-
----
 
 ## Install
 
